@@ -1,6 +1,7 @@
 exports.repo = "8gudbits/hfs-cmdlink"
 exports.version = 1.0
 exports.description = "Execute commands on the server from the frontend."
+exports.preview = "https://github.com/8gudbits/hfs-cmdlink/raw/main/preview.png"
 exports.apiRequired = 8.23
 exports.frontend_js = "main.js"
 exports.frontend_css = "style.css"
