@@ -32,6 +32,10 @@ To contribute to this plugin:
 2. Make your changes
 3. Submit a pull request
 
+## Screenshot
+
+![Screenshot](./preview.png)
+
 ## Changelog
 
 ### v1.0
