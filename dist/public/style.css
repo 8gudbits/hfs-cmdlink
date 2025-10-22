@@ -1,0 +1,109 @@
+.terminal-floating-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #2d3748;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 0;
+}
+
+.terminal-floating-btn:hover {
+    transform: scale(1.1);
+    background: #4a5568;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.terminal-floating-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+#terminal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.terminal-window {
+    background: #1a202c;
+    border-radius: 8px;
+    width: 80%;
+    height: 70%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.terminal-header {
+    background: #2d3748;
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.terminal-header button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+#terminal-content {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    color: #cbd5e0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
+.terminal-input-container {
+    padding: 12px 16px;
+    border-top: 1px solid #4a5568;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.prompt {
+    color: #68d391;
+    font-family: monospace;
+}
+
+.terminal-input {
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: monospace;
+    font-size: 14px;
+    flex: 1;
+    outline: none;
+}
+
