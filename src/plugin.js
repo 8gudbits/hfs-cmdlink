@@ -1,5 +1,5 @@
 exports.repo = "8gudbits/hfs-cmdlink"
-exports.version = 1.0
+exports.version = 1.1
 exports.description = "Execute commands on the server from the frontend."
 exports.preview = "https://github.com/8gudbits/hfs-cmdlink/raw/main/preview.png"
 exports.apiRequired = 8.23
@@ -19,9 +19,27 @@ exports.config = {
 const { exec } = require("child_process")
 
 exports.init = function (api) {
+  function hasRunPermission(ctx) {
+    const pluginConfig = api.getConfig()
+    const allowedUsers = pluginConfig.allowedUsers || []
+
+    if (allowedUsers.length === 0) {
+      return false
+    }
+
+    const currentUser = api.getCurrentUsername(ctx)
+    if (!currentUser) {
+      return false
+    }
+
+    return allowedUsers.some((user) => api.ctxBelongsTo(ctx, user))
+  }
+
   exports.customRest = {
-    async executeCommand({ command }) {
+    async executeCommand({ command }, ctx) {
       return new Promise((resolve) => {
+        if (!hasRunPermission(ctx)) return resolve({ success: false, output: "You don't have permission to run commands" })
+        
         if (!command) {
           return resolve({ success: false, output: "Empty command" })
         }
@@ -43,4 +61,3 @@ exports.init = function (api) {
     },
   }
 }
-
