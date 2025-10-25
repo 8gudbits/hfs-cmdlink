@@ -5,6 +5,9 @@ exports.preview = "https://github.com/8gudbits/hfs-cmdlink/raw/main/preview.png"
 exports.apiRequired = 8.23
 exports.frontend_js = "main.js"
 exports.frontend_css = "style.css"
+exports.changelog = [
+  { "version": 1.1, "message": "Added backend permission verification" }
+]
 
 exports.config = {
   allowedUsers: {
