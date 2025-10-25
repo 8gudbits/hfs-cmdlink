@@ -38,6 +38,10 @@ To contribute to this plugin:
 
 ## Changelog
 
+### v1.1
+
+- Added backend permission verification
+
 ### v1.0
 
 - Initial release
