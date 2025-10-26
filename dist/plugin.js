@@ -1,12 +1,14 @@
 exports.repo = "8gudbits/hfs-cmdlink"
-exports.version = 1.1
+exports.version = 1.2
 exports.description = "Execute commands on the server from the frontend."
 exports.preview = "https://github.com/8gudbits/hfs-cmdlink/raw/main/preview.png"
-exports.apiRequired = 8.23
+exports.apiRequired = 10.3
 exports.frontend_js = "main.js"
 exports.frontend_css = "style.css"
 exports.changelog = [
-  { "version": 1.1, "message": "Added backend permission verification" }
+  { "version": 1.2, "message": "Added persistent shell sessions and improved terminal behavior" },
+  { "version": 1.1, "message": "CRITICAL FIX: Added backend permission verification (Please UPDATE!)" },
+  { "version": 1.0, "message": "Initial release with basic command execution functionality" }
 ]
 
 exports.config = {
@@ -19,9 +21,11 @@ exports.config = {
   },
 }
 
-const { exec } = require("child_process")
+const { spawn } = require("child_process")
 
 exports.init = function (api) {
+  const sessions = new Map()
+
   function hasRunPermission(ctx) {
     const pluginConfig = api.getConfig()
     const allowedUsers = pluginConfig.allowedUsers || []
@@ -39,28 +43,86 @@ exports.init = function (api) {
   }
 
   exports.customRest = {
-    async executeCommand({ command }, ctx) {
-      return new Promise((resolve) => {
-        if (!hasRunPermission(ctx)) return resolve({ success: false, output: "You don't have permission to run commands" })
-        
-        if (!command) {
-          return resolve({ success: false, output: "Empty command" })
+    async startSession(params, ctx) {
+      if (!hasRunPermission(ctx))
+        return {
+          success: false,
+          output: "You don't have permission to run commands",
         }
 
-        exec(command, (error, stdout, stderr) => {
-          if (error) {
-            resolve({
-              success: false,
-              output: stderr || error.message,
-            })
-          } else {
-            resolve({
-              success: true,
-              output: stdout,
-            })
-          }
-        })
+      const sessionId = Math.random().toString(36).substr(2, 9)
+      const shell = spawn(process.platform === "win32" ? "cmd" : "bash")
+
+      let initialOutput = ""
+      let initialResolved = false
+
+      shell.stdout.on("data", (data) => {
+        const output = data.toString()
+        if (!initialResolved) {
+          initialOutput += output
+        } else {
+          api.notifyClient(sessionId, "output", output)
+        }
       })
+
+      shell.stderr.on("data", (data) => {
+        const output = data.toString()
+        if (!initialResolved) {
+          initialOutput += output
+        } else {
+          api.notifyClient(sessionId, "output", output)
+        }
+      })
+
+      shell.on("close", () => {
+        api.notifyClient(sessionId, "closed", "")
+        sessions.delete(sessionId)
+      })
+
+      setTimeout(() => {
+        initialResolved = true
+        sessions.set(sessionId, shell)
+      }, 100)
+
+      return {
+        success: true,
+        sessionId,
+        initialOutput: initialOutput,
+      }
+    },
+
+    async executeCommand(params, ctx) {
+      if (!hasRunPermission(ctx))
+        return {
+          success: false,
+          output: "You don't have permission to run commands",
+        }
+
+      const { sessionId, command } = params
+      const shell = sessions.get(sessionId)
+      if (!shell) {
+        return { success: false, output: "Session not found" }
+      }
+
+      shell.stdin.write(command + "\n")
+      return { success: true }
+    },
+
+    async closeSession(params, ctx) {
+      const { sessionId } = params
+      const shell = sessions.get(sessionId)
+      if (shell) {
+        shell.kill()
+        sessions.delete(sessionId)
+      }
+      return { success: true }
+    },
+  }
+
+  return {
+    unload() {
+      sessions.forEach((shell) => shell.kill())
+      sessions.clear()
     },
   }
 }

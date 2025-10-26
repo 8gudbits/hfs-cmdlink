@@ -9,7 +9,7 @@ Execute commands on the server from the frontend.
 
 ## Manual Installation
 
-1. Download the plugin's `dist` folder
+1. Download the plugin's `dist` folder and rename it to `cmdlink`
 2. Place it in your HFS `plugins` directory
 3. Refresh HFS admin page
 
@@ -37,6 +37,10 @@ To contribute to this plugin:
 ![Screenshot](./preview.png)
 
 ## Changelog
+
+### v1.2
+
+- Added persistent shell sessions and improved terminal behavior
 
 ### v1.1
 
