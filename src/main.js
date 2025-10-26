@@ -12,14 +12,6 @@ if (
 
 function createTerminalButton() {
   const button = document.createElement("button")
-  button.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-            <line x1="6" y1="8" x2="18" y2="8"></line>
-            <line x1="6" y1="12" x2="18" y2="12"></line>
-            <line x1="6" y1="16" x2="12" y2="16"></line>
-        </svg>
-    `
   button.title = "Open Terminal"
   button.id = "terminal-btn"
   button.className = "terminal-floating-btn"
@@ -28,16 +20,45 @@ function createTerminalButton() {
 
   let terminalOpen = false
   let currentSessionId = null
+  let overlay = null
+  let terminal = null
+
+  function isSmallScreen() {
+    return window.innerWidth <= 672
+  }
+
+  function updateTerminalSize() {
+    if (!terminal) return
+
+    if (isSmallScreen()) {
+      terminal.style.width = "100%"
+      terminal.style.height = "100%"
+      terminal.style.maxWidth = "none"
+      terminal.style.borderRadius = "0"
+    } else {
+      terminal.style.width = "80%"
+      terminal.style.height = "70%"
+      terminal.style.maxWidth = "800px"
+      terminal.style.borderRadius = "8px"
+    }
+  }
 
   button.addEventListener("click", async () => {
     if (terminalOpen) return
     terminalOpen = true
 
-    const overlay = document.createElement("div")
+    overlay = document.createElement("div")
     overlay.id = "terminal-overlay"
+    overlay.style.opacity = "0"
+    overlay.style.transform = "translateY(100%)"
 
-    const terminal = document.createElement("div")
+    terminal = document.createElement("div")
     terminal.className = "terminal-window"
+    terminal.style.transform = "translateY(100%)"
+    terminal.style.opacity = "0"
+
+    // Set initial size based on screen size
+    updateTerminalSize()
 
     const header = document.createElement("div")
     header.className = "terminal-header"
@@ -61,6 +82,24 @@ function createTerminalButton() {
     terminal.appendChild(inputContainer)
     overlay.appendChild(terminal)
     document.body.appendChild(overlay)
+
+    // Handle window resize
+    const handleResize = () => {
+      updateTerminalSize()
+    }
+    window.addEventListener("resize", handleResize)
+
+    // Animate overlay and terminal in
+    requestAnimationFrame(() => {
+      overlay.style.transition =
+        "opacity 0.3s ease-out, transform 0.3s ease-out"
+      terminal.style.transition = "all 0.3s ease-out"
+
+      overlay.style.opacity = "1"
+      overlay.style.transform = "translateY(0)"
+      terminal.style.transform = "translateY(0)"
+      terminal.style.opacity = "1"
+    })
 
     try {
       // Start new shell session for this terminal instance
@@ -87,13 +126,31 @@ function createTerminalButton() {
       content.textContent = "Network error: " + error
     }
 
-    const closeTerminal = () => {
+    const performClose = () => {
       if (currentSessionId) {
         HFS.customRestCall("closeSession", { sessionId: currentSessionId })
         currentSessionId = null
       }
-      document.body.removeChild(overlay)
+      window.removeEventListener("resize", handleResize)
+      if (overlay && overlay.parentNode) {
+        document.body.removeChild(overlay)
+      }
       terminalOpen = false
+      overlay = null
+      terminal = null
+    }
+
+    const closeTerminal = () => {
+      if (!terminalOpen) return
+
+      // Start closing animation
+      overlay.style.opacity = "0"
+      overlay.style.transform = "translateY(100%)"
+      terminal.style.transform = "translateY(100%)"
+      terminal.style.opacity = "0"
+
+      // Wait for animation to complete before closing
+      setTimeout(performClose, 300)
     }
 
     header
@@ -138,7 +195,7 @@ function createTerminalButton() {
       }
     })
 
-    setTimeout(() => input.focus(), 100)
+    setTimeout(() => input.focus(), 400)
   })
 }
 

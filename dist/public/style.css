@@ -1,32 +1,45 @@
+:root {
+    --radius: 8px;
+    --slide-duration: 0.3s;
+    --slide-timing: ease-out;
+}
+
 .terminal-floating-btn {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background: var(--button-bg);
-    border: none;
-    border-radius: 50%;
     width: 50px;
     height: 50px;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    z-index: 9999;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--button-color);
-    padding: 0;
+    z-index: 1000;
+    transition: all var(--slide-duration) var(--slide-timing);
+    font-family: 'Courier New', monospace;
+    font-weight: 900;
 }
 
 .terminal-floating-btn:hover {
     transform: scale(1.1);
-    background: var(--button-hover-bg);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    background-color: var(--button-hover-bg, var(--button-bg));
 }
 
-.terminal-floating-btn svg {
-    width: 20px;
-    height: 20px;
+.terminal-floating-btn:active {
+    transform: scale(0.95);
+}
+
+.terminal-floating-btn::before {
+    content: '>_';
+    font-size: 18px;
+    font-weight: 950;
+    text-shadow: 0 0 1px currentColor;
 }
 
 #terminal-overlay {
@@ -105,3 +118,39 @@
     outline: none;
     padding: 4px 8px;
 }
+
+@media (max-width: 672px) {
+    .terminal-window {
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 70em) {
+    .terminal-floating-btn {
+        bottom: 15px;
+        left: 15px;
+        width: 45px;
+        height: 45px;
+    }
+
+    .terminal-floating-btn::before {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .terminal-floating-btn {
+        bottom: 10px;
+        left: 10px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .terminal-floating-btn::before {
+        font-size: 14px;
+    }
+}
+
