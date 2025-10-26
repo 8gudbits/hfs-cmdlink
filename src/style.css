@@ -2,7 +2,7 @@
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background: #2d3748;
+    background: var(--button-bg);
     border: none;
     border-radius: 50%;
     width: 50px;
@@ -14,13 +14,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--button-color);
     padding: 0;
 }
 
 .terminal-floating-btn:hover {
     transform: scale(1.1);
-    background: #4a5568;
+    background: var(--button-hover-bg);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
@@ -43,7 +43,7 @@
 }
 
 .terminal-window {
-    background: #1a202c;
+    background: #000000;
     border-radius: 8px;
     width: 80%;
     height: 70%;
@@ -54,7 +54,7 @@
 }
 
 .terminal-header {
-    background: #2d3748;
+    background: #333333;
     padding: 12px 16px;
     border-radius: 8px 8px 0 0;
     display: flex;
@@ -77,33 +77,32 @@
     flex: 1;
     padding: 16px;
     overflow-y: auto;
-    color: #cbd5e0;
+    color: #ffffff;
     font-family: 'Courier New', monospace;
     font-size: 14px;
     line-height: 1.4;
     white-space: pre-wrap;
+    background: #000000;
 }
 
 .terminal-input-container {
+    background: #333333;
     padding: 12px 16px;
-    border-top: 1px solid #4a5568;
+    border-radius: 0 0 8px 8px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.prompt {
-    color: #68d391;
-    font-family: monospace;
-}
-
 .terminal-input {
-    background: transparent;
+    background: #000000;
     border: none;
-    color: white;
+    border-radius: 4px;
+    color: #ffffff;
     font-family: monospace;
     font-size: 14px;
     flex: 1;
     outline: none;
+    padding: 4px 8px;
 }
 
