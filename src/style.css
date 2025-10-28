@@ -19,7 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 100;
     transition: all var(--slide-duration) var(--slide-timing);
     font-family: 'Courier New', monospace;
     font-weight: 900;
@@ -52,7 +52,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    z-index: 1000;
 }
 
 .terminal-window {
