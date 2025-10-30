@@ -1,11 +1,12 @@
 exports.repo = "8gudbits/hfs-cmdlink"
-exports.version = 1.2
+exports.version = 1.3
 exports.description = "Execute commands on the server from the frontend."
 exports.preview = "https://github.com/8gudbits/hfs-cmdlink/raw/main/preview.png"
 exports.apiRequired = 10.3
 exports.frontend_js = "main.js"
 exports.frontend_css = "style.css"
 exports.changelog = [
+  { "version": 1.3, "message": "Bugfix: Resolved 'Identifier has already been declared' JavaScript error" },
   { "version": 1.2, "message": "Added persistent shell sessions and improved terminal behavior" },
   { "version": 1.1, "message": "CRITICAL FIX: Added backend permission verification (Please UPDATE!)" },
   { "version": 1.0, "message": "Initial release with basic command execution functionality" }
