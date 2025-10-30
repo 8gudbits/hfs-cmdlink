@@ -1,6 +1,5 @@
 "use strict"
-const config = HFS.getPluginConfig()
-const allowedUsers = config.allowedUsers || []
+const allowedUsers = HFS.getPluginConfig().allowedUsers || []
 
 // Only show terminal button if user has permission
 if (

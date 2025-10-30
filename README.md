@@ -38,6 +38,10 @@ To contribute to this plugin:
 
 ## Changelog
 
+### v1.3
+
+- Bugfix: Resolved 'Identifier has already been declared' JavaScript error
+
 ### v1.2
 
 - Added persistent shell sessions and improved terminal behavior
