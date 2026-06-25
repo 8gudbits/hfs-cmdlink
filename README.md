@@ -38,6 +38,11 @@ To contribute to this plugin:
 
 ## Changelog
 
+### v1.4
+
+- Updated backend permission checks for native HFS API array changes
+- Fixed server ghost session leaks on tab refresh/close
+
 ### v1.3
 
 - Bugfix: Resolved 'Identifier has already been declared' JavaScript error

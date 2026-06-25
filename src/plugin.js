@@ -1,11 +1,12 @@
 exports.repo = "8gudbits/hfs-cmdlink"
-exports.version = 1.3
+exports.version = 1.4
 exports.description = "Execute commands on the server from the frontend."
 exports.preview = "https://github.com/8gudbits/hfs-cmdlink/raw/main/preview.png"
 exports.apiRequired = 10.3
 exports.frontend_js = "main.js"
 exports.frontend_css = "style.css"
 exports.changelog = [
+  { "version": 1.4, "message": "Updated backend permission checks for native HFS API array changes and fixed server ghost session leaks on tab refresh/close" },
   { "version": 1.3, "message": "Bugfix: Resolved 'Identifier has already been declared' JavaScript error" },
   { "version": 1.2, "message": "Added persistent shell sessions and improved terminal behavior" },
   { "version": 1.1, "message": "CRITICAL FIX: Added backend permission verification (Please UPDATE!)" },
@@ -27,21 +28,23 @@ const { spawn } = require("child_process")
 exports.init = function (api) {
   const sessions = new Map()
 
-  // Check if current user has permission to use terminal
+  // Helper function to check if current user has permission to open terminal and execute commands
   function hasRunPermission(ctx) {
     const pluginConfig = api.getConfig()
     const allowedUsers = pluginConfig.allowedUsers || []
 
+    // If allowedUsers is empty, NO ONE has permission (default deny)
     if (allowedUsers.length === 0) {
       return false
     }
 
+    // Check if current user belongs to any of the allowed users/groups
     const currentUser = api.getCurrentUsername(ctx)
     if (!currentUser) {
-      return false
+      return false // No user logged in
     }
 
-    return allowedUsers.some((user) => api.ctxBelongsTo(ctx, user))
+    return api.ctxBelongsTo(ctx, allowedUsers)
   }
 
   exports.customRest = {

@@ -2,10 +2,7 @@
 const allowedUsers = HFS.getPluginConfig().allowedUsers || []
 
 // Only show terminal button if user has permission
-if (
-  allowedUsers.length > 0 &&
-  allowedUsers.some((user) => HFS.userBelongsTo(user))
-) {
+if (allowedUsers.length > 0 && HFS.userBelongsTo(allowedUsers)) {
   createTerminalButton()
 }
 
@@ -41,6 +38,13 @@ function createTerminalButton() {
       terminal.style.borderRadius = "8px"
     }
   }
+
+  // Fires to clean up backend resources if the browser tab/page is closed or refreshed abruptly
+  window.addEventListener("beforeunload", () => {
+    if (currentSessionId) {
+      HFS.customRestCall("closeSession", { sessionId: currentSessionId })
+    }
+  })
 
   button.addEventListener("click", async () => {
     if (terminalOpen) return
